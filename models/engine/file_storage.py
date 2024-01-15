@@ -50,6 +50,7 @@ class FileStorage:
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
+        from models.base_model import BaseModel
         try:
             with open(FileStorage.__file_path) as f:
                 objdict = json.load(f)
