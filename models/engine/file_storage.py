@@ -24,7 +24,7 @@ class FileStorage:
         Returns:
             dict: Dictionary of all objects.
         """
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """
@@ -34,16 +34,16 @@ class FileStorage:
             obj (BaseModel): The object to be added.
         """
         key = "{}.{}".format(type(obj).__name__, obj.id)
-        self.__objects[key] = obj
+        FileStorage.__objects[key] = obj
 
     def save(self):
         """
         Serializes __objects to the JSON file (__file_path).
         """
-        ser_dict = {}
-        for key, obj in self.__objects.items():
+        ser_dict = FileStorage.__objects
+        for key, obj in FileStorage.__objects.items():
             ser_dict[key] = obj.to_dict()
-        with open(self.__file_path, 'w') as file:
+        with open(FileStorage.__file_path, 'w') as file:
             json.dump(ser_dict, file)
 
     def reload(self):
@@ -53,13 +53,13 @@ class FileStorage:
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
-        if path.exists(self.__file_path):
+        if path.exists(FileStorage.__file_path):
             obj_dict = {}
-            with open(self.__file_path, 'r') as file:
+            with open(FileStorage.__file_path, 'r') as file:
                 obj_dict = json.loads(file.read())
             from models.base_model import BaseModel
             for key, m in obj_dict.items():
                 class_name = m["__class__"]
                 del m["__class__"]
                 cls = globals().get(class_name, BaseModel)
-                self.__objects[key] = cls(**m)
+                FileStorage.__objects[key] = cls(**m)
