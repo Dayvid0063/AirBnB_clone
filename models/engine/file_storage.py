@@ -2,8 +2,6 @@
 
 
 import json
-import os.path
-
 
 class FileStorage:
     """
@@ -33,18 +31,17 @@ class FileStorage:
         Args:
             obj (BaseModel): The object to be added.
         """
-        key = "{}.{}".format(type(obj).__name__, obj.id)
-        FileStorage.__objects[key] = obj
+        oc_name = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(oc_name, obj.id)] = obj
 
     def save(self):
         """
         Serializes __objects to the JSON file (__file_path).
         """
-        ser_dict = {}
-        for key, obj in FileStorage.__objects.items():
-            ser_dict[key] = obj.to_dict()
-        with open(FileStorage.__file_path, 'w') as file:
-            json.dump(ser_dict, file)
+        odict = FileStorage.__objects
+        obj_dict = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        with open(FileStorage.__file_path, "w") as file:
+            json.dump(obj_dict, file)
 
     def reload(self):
         """
@@ -53,15 +50,12 @@ class FileStorage:
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
-        file_path = os.path.abspath(FileStorage.__file_path)
-        
-        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-            obj_dict = {}
-            with open(FileStorage.__file_path, 'r') as file:
-                obj_dict = json.loads(file.read())
-            from models.base_model import BaseModel
-            for key, m in obj_dict.items():
-                class_name = m["__class__"]
-                del m["__class__"]
-                cls = globals().get(class_name, BaseModel)
-                FileStorage.__objects[key] = cls(**m)
+        try:
+            with open(FileStorage.__file_path) as f:
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
+        except FileNotFoundError:
+            return
