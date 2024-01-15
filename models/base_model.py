@@ -31,7 +31,7 @@ class BaseModel:
     def __str__(self):
         """Returns a string representation of the BaseModel instance"""
         return "[{}] ({}) {}".format(type(self).__name__,
-                                    self.id, str(self.__dict__))
+                                     self.id, str(self.__dict__))
 
     def save(self):
         """Updates the attribute and saves the instance to storage"""
