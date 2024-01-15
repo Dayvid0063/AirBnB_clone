@@ -33,7 +33,7 @@ class FileStorage:
         Args:
             obj (BaseModel): The object to be added.
         """
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        key = "{}.{}".format(type(obj).__name__, obj.id)
         FileStorage.__objects[key] = obj
 
     def save(self):
