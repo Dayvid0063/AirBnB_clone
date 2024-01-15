@@ -2,7 +2,7 @@
 
 
 import json
-from os import path
+import os.path
 
 
 class FileStorage:
@@ -53,7 +53,9 @@ class FileStorage:
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
-        if path.exists(FileStorage.__file_path):
+        file_path = os.path.abspath(FileStorage.__file_path)
+        
+        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
             obj_dict = {}
             with open(FileStorage.__file_path, 'r') as file:
                 obj_dict = json.loads(file.read())
