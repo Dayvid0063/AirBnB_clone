@@ -1,29 +1,30 @@
 #!/usr/bin/python3
-"""
-This class provides methods for serializing instances to a JSON file
-and deserializing a JSON file to instances.
-"""
-
-
 import json
-from os import path
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
-from models.review import Review
-
 
 class FileStorage:
     """
+    This class provides methods for serializing instances to a JSON file
+    and deserializing a JSON file to instances.
+
     Attributes:
         __file_path (str): Path to the JSON file.
         __objects (dict): Dictionary to store all objects by <class name>.id.
     """
     __file_path = "file.json"
     __objects = {}
+
+    @classmethod
+    def _import_all_model_classes(cls):
+        """
+        Dynamically import model classes.
+        """
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.place import Place
+        from models.amenity import Amenity
+        from models.review import Review
 
     def all(self):
         """
@@ -59,13 +60,17 @@ class FileStorage:
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
+        self._import_all_model_classes()
         try:
             with open(FileStorage.__file_path) as file:
                 obj_dict = json.load(file)
                 for obj_id, obj_data in obj_dict.items():
                     class_name = obj_data["__class__"]
                     del obj_data["__class__"]
-                    cls = eval(class_name)
+                    try:
+                        cls = eval(class_name)
+                    except NameError:
+                        cls = BaseModel
                     self.new(cls(**obj_data))
         except FileNotFoundError:
             return
