@@ -51,21 +51,20 @@ class FileStorage:
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
-        
-        file_path = os.path.abspath(FileStorage.__file_path)
-        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-            obj_dict = {}
-            with open(FileStorage.__file_path, 'r') as file:
-                obj_dict = json.loads(file.read())
-                from models.base_model import BaseModel
-                for key, m in obj_dict.items():
-                    class_name = m["__class__"]
-                    del m["__class__"]
-                    if '.' in class_name:
-                        module_name, class_name = class_name.rsplit('.', 1)
-                        module = __import__(module_name, globals(), locals(), [class_name], 0)
-                        cls = getattr(module, class_name)
-                    else:
-                        cls = globals().get(class_name, BaseModel)
-                        FileStorage.__objects[key] = cls(**m)
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.place import Place
+        from models.amenity import Amenity
+        from models.review import Review
+        try:
+            with open(FileStorage.__file_path) as f:
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
+        except FileNotFoundError:
+            return
 
