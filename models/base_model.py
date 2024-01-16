@@ -8,33 +8,36 @@ import models
 
 class BaseModel:
     """Attributes: Date format used for date string conversion"""
-    DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
+    
 
     def __init__(self, *args, **kwargs):
-        """Initializes a new instance of BaseModel"""
-        if kwargs:
-            self.id = kwargs.get('id', str(uuid.uuid4()))
-            self.created_at = kwargs.get('created_at', datetime.now())
-            self.updated_at = kwargs.get('updated_at', datetime.now())
+        """Initializes a new instance of BaseModel
+           Args:
+            *args (any): Unused.
+            **kwargs (dict): Key/value pairs of attributes.
+        """
+        DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+
+        if len(kwargs) != 0:
             for key, value in kwargs.items():
-                if key != '__class__':
-                    if key in ['created_at', 'updated_at']:
-                        value = datetime.strptime(value, self.DATE_FORMAT)
-                    setattr(self, key, value)
+                if key in ['created_at', 'updated_at']:
+                    self.__dict__[key] = datetime.strptime(value, DATE_FORMAT)
+                else:
+                    self.__dict__[key] = value
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the BaseModel instance"""
-        return "[{}] ({}) {}".format(type(self).__name__,
-                                     self.id, str(self.__dict__))
+        clname = self.__class__.__name__
+        return "[{}] ({}) {}".format(clname, self.id, self.__dict__)
 
     def save(self):
         """Updates the attribute and saves the instance to storage"""
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.today()
         models.storage.save()
 
     def to_dict(self):
