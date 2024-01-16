@@ -6,7 +6,7 @@ and deserializes JSON file to instances
 
 
 import json
-from os import path
+import os.path
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -58,17 +58,22 @@ class FileStorage:
             json.dump(ser_dict, file)
 
     def reload(self):
-        """Deserializes the JSON file to __objects.
+        """
+        Deserializes the JSON file to __objects.
+        
         If the JSON file (__file_path) exists, loads the data and creates
         instances of the corresponding classes. Otherwise, does nothing.
         """
-        try:
-            with open(FileStorage.__file_path) as file:
-                obj_dict = json.load(file)
-                for obj_id, obj_data in obj_dict.items():
-                    class_name = obj_data["__class__"]
-                    del obj_data["__class__"]
-                    cls = eval(class_name)
-                    self.new(cls(**obj_data))
-        except FileNotFoundError:
-            return
+        if os.path.exists(FileStorage.__file_path):
+            obj_dict = {}
+            with open(FileStorage.__file_path, 'r') as file:
+                obj_dict = json.loads(file.read())
+                for key, m in obj_dict.items():
+                    class_name = m["__class__"]
+                    del m["__class__"]
+            try:
+                cls = eval(class_name)
+            except NameError:
+                cls = None
+            if cls:
+                FileStorage.__objects[key] = cls(**m)
