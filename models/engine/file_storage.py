@@ -2,6 +2,7 @@
 import json
 from models.base_model import BaseModel
 
+
 class FileStorage:
     """
     This class provides methods for serializing instances to a JSON file
@@ -63,9 +64,12 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path) as file:
                 obj_dict = json.load(file)
-                for obj_id in obj_dict.values():
-                    class_name = obj_id["__class__"]
-                    del obj_id["__class__"]
-                    self.new(eval(class_name)(**obj_id))
+                for obj_id, obj_data in obj_dict.items():
+                    class_name = obj_data["__class__"]
+                    del obj_data["__class__"]
+                    if class_name not in globals():
+                        self._import_all_model_classes()
+                    model_class = globals()[class_name]
+                    self.new(model_class(**obj_data))
         except FileNotFoundError:
             return

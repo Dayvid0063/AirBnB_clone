@@ -6,9 +6,9 @@ import uuid
 from datetime import datetime
 import models
 
+
 class BaseModel:
     """Attributes: Date format used for date string conversion"""
-    
 
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of BaseModel

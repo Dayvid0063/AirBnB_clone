@@ -2,6 +2,7 @@
 
 from models.base_model import BaseModel
 
+
 class User(BaseModel):
     """
     User class inherits from BaseModel.
@@ -12,8 +13,7 @@ class User(BaseModel):
     first_name: string - empty string
     last_name: string - empty string
     """
-    
-    
+
     email = ""
     password = ""
     first_name = ""
