@@ -37,6 +37,12 @@ class FileStorage:
     def save(self):
         """Serializes __objects to the JSON file (__file_path)."""
         obj_dict = {}
+        try:
+            with open(FileStorage.__file_path, 'r') as file:
+                obj_dict = json.load(file)
+        except FileNotFoundError:
+            pass
+
         for key, obj in FileStorage.__objects.items():
             obj_dict[key] = obj.to_dict()
 
