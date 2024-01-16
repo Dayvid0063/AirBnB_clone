@@ -100,5 +100,5 @@ $
 
 ## Authors
 
-- [@cruso003](https://www.github.com/cruso003)
+- [@cruso003](https://www.github.com/cruso003)(crusoehenrique3@gmail.com)
 - [@Dayvid0063](https://github.com/Dayvid0063)
