@@ -53,8 +53,8 @@ class FileStorage:
         """
         from models.base_model import BaseModel
         try:
-            with open(FileStorage.__file_path) as f:
-                obj_dict = json.load(f)
+            with open(FileStorage.__file_path) as file:
+                obj_dict = json.load(file)
                 for obj_id, obj_data in obj_dict.items():
                     class_name = obj_data["__class__"]
                     del obj_data["__class__"]
