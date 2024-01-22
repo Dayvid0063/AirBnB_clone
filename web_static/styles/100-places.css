@@ -1,0 +1,58 @@
+/* Styling for Amenities section */
+.places .amenities {
+    margin-top: 40px;
+}
+
+/* Styling for the Amenities title */
+.places .amenities h2 {
+    font-size: 16px;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+/* Styling for the Amenities list */
+.places .amenities ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Styling for individual Amenities items */
+.places .amenities li {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    list-style-type: none;
+}
+
+/* Styling for Reviews section */
+.places .reviews {
+    margin-top: 40px;
+}
+
+/* Styling for the Reviews title */
+.places .reviews h2 {
+    font-size: 16px;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+/* Styling for the Reviews list */
+.places .reviews ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Styling for individual Reviews items */
+.places .reviews li {
+    list-style-type: none;
+    
+}
+
+/* User/Date description styling */
+.places .reviews h3 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Styling for the text in a Review */
+.places .reviews p {
+    font-size: 12px;
+}
